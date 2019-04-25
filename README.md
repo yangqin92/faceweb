@@ -1,3 +1,5 @@
 # faceweb
 福州项目的前端
 chrome文件夹存放的是这次使用的浏览器插件
+faceverity是为了接收后台传过来的数据，在前端搭建的服务器
+ffmpeg 和nginx为了将rtsp视频转换为rtmp
