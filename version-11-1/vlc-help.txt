@@ -1,0 +1,490 @@
+﻿  visual                 可视化滤镜
+  projectm               libprojectM 效果
+  goom                   Goom 效果
+  glspectrum             3D OpenGL 频谱可视化
+  wall                   墙视频滤镜
+  panoramix              Panoramix: 边界重叠式视频墙 视频滤镜
+  clone                  克隆视频滤镜
+  yuv                    YUV 视频输出
+  inhibit                Windows screen saver inhibition
+  wingdi                 Windows GDI 视频输出
+  wgl                    用于 OpenGL 的 WGL 扩展
+  vmem                   显存输出
+  vdummy                 dummy 视频输出
+  vdummy                 统计视频输出
+  gl                     OpenGL 视频输出
+  glwin32                用于 Windows 的 OpenGL 视频输出
+  flaschen               Flaschen-Taschen video output
+  drawable               嵌入窗口视频
+  directdraw             DirectX (DirectDraw) 视频输出
+  direct3d9              Direct3D9 视频输出
+  direct3d9              DX OpenGL surface converter for D3D9
+  direct3d11             Direct3D11 视频输出
+  caca                   彩色 ASCII 艺术画视频输出
+  wave                   波形视频滤镜
+  vhs                    VHS 影片效果视频滤镜
+  transform              视频变换滤镜
+  sharpen                锐化视频滤镜
+  sepia                  棕褐色视频滤镜
+  scene                  场景视频滤镜
+  scale                  视频缩放滤镜
+  rotate                 旋转视频滤镜
+  ripple                 波纹视频滤镜
+  puzzle                 解谜交互游戏视频滤镜
+  psychedelic            幻觉视频滤镜
+  postproc               视频后处理滤镜
+  posterize              色调简化视频滤镜
+  oldmovie               老电影效果视频滤镜
+  motiondetect           运动检测视频滤镜
+  motionblur             运动模糊滤镜
+  mirror                 镜像视频滤镜
+  magnify                放大/变焦交互视频滤镜
+  invert                 反色视频滤镜
+  hqdn3d                 高质量 3D 降噪器滤镜
+  grain                  颗粒视频滤镜
+  gradient               梯度视频滤镜
+  gradfun                gradfun 视频滤镜
+  gaussianblur           高斯模糊视频滤镜
+  freeze                 交互区域静止视频滤镜
+  fps                    FPS 转换视频滤镜
+  extract                提取 RGB 成分视频滤镜
+  erase                  擦除视频滤镜
+  edgedetection          边界侦测视频滤镜
+  deinterlace            反交错视频滤镜
+  croppadd               视频裁剪滤镜
+  colorthres             色彩阈值滤镜
+  canvas                 画布视频滤镜
+  bluescreen             蓝幕视频滤镜
+  blend                  视频画面混合
+  blendbench             合成跑分滤镜
+  ball                   球视频滤镜
+  antiflicker            antiflicker 视频滤镜
+  anaglyph               将 3D 画面转换为分色立体图像的视频滤镜
+  alphamask              Alpha 掩码视频滤镜
+  adjust                 图像属性滤镜
+  yuy2_i422              Conversions from YUY2,YUNV,YVYU,UYVY,UYNV,Y422 to I422
+  yuy2_i420              Conversions from YUY2,YUNV,YVYU,UYVY,UYNV,Y422 to I420
+  yuvp                   YUVP 转换器
+  swscale                视频缩放滤镜
+  rv32                   RV32 转换滤镜
+  i422_yuy2_sse2         SSE2 conversions from I422 to YUY2,YUNV,YVYU,UYVY,UYNV,Y422,IUYV
+  i422_yuy2              Conversions from I422 to YUY2,YUNV,YVYU,UYVY,UYNV,Y422,IUYV,Y211
+  i422_yuy2_mmx          MMX conversions from I422 to YUY2,YUNV,YVYU,UYVY,UYNV,Y422,IUYV
+  i422_i420              Conversions from I422,J422 to I420,IYUV,J420,YV12,YUVA
+  i420_yuy2_sse2         SSE2 conversions from I420,IYUV,YV12 to YUY2,YUNV,YVYU,UYVY,UYNV,Y422,IUYV
+  i420_yuy2              Conversions from I420,IYUV,YV12 to YUY2,YUNV,YVYU,UYVY,UYNV,Y422,IUYV,Y211
+  i420_yuy2_mmx          MMX conversions from I420,IYUV,YV12 to YUY2,YUNV,YVYU,UYVY,UYNV,Y422,IUYV
+  i420_rgb_sse2          SSE2 I420,IYUV,YV12 到 RV15,RV16,RV24,RV32 转换
+  i420_rgb               I420,IYUV,YV12 到 RGB2,RV15,RV16,RV24,RV32 转换
+  i420_rgb_mmx           MMX I420,IYUV,YV12 到 RV15,RV16,RV24,RV32 转换
+  i420_nv12              YUV 全平面向半平面转换
+  i420_10_p010           YUV 10 位全平面向 10 位半平面转换
+  grey_yuv               Conversions from GREY to I420,YUY2
+  chain                  使用一个链式视频滤镜模块过滤视频
+  chain                  使用一个链式视频滤镜模块过滤视频
+  tdummy                 dummy 字体渲染器
+  sapi                   用于 Windows 的语音合成
+  freetype               Freetype2 字体渲染器
+  stream_out_transcode   转码流输出
+  stats                  写入串流的统计信息
+  stream_out_standard    标准流输出
+  smem                   输出到内存缓冲器的流
+  setid                  更改基本流的 id
+  setid                  更改基本流的语言
+  stream_out_rtp         RTP 流输出
+  stream_out_rtp         RTSP VoD 服务器
+  record                 录制流输出
+  mosaic_bridge          mosaic 桥流输出
+  gather                 gather 流输出
+  es                     基本流输出
+  duplicate              复制流输出
+  dummy                  dummy 串流输出
+  display                显示流输出
+  description            描述流输出
+  delay                  延迟流
+  cycle                  循环式流输出
+  stream_out_chromecast  Chromecast 流输出
+  stream_out_chromecast  Chromecast 流输出
+  stream_out_chromecast  Chromecast 流输出
+  stream_out_chromaprint Chromaprint 串流输出
+  bridge                 桥接流输出
+  bridge                 桥接流输出
+  bridge                 桥接流输出
+  autodel                自动添加/删除输入流
+  skiptags               APE/ID3 标签跳过滤镜
+  record                 内部串流录制
+  prefetch               流预装取滤镜
+  inflate                Zlib 解压滤镜
+  hds                    HTTP 动态流
+  cache_read             字节流缓存
+  cache_block            块流缓存
+  aribcam                ARIB STD-B25 Cam 模块
+  adf                    ADF 流滤镜
+  archive                基于 libarchive 的流目录
+  archive                基于 libarchive 的流提取器
+  subsdelay              字幕延迟
+  rss                    RSS 与 Atom feed 显示
+  remoteosd              通过 VNC 的远程 OSD
+  mosaic                 mosaic 视频子源
+  marq                   滚动文字显示
+  logo                   标志（logo）子源滤镜
+  logo                   标志视频滤镜
+  audiobargraph_v        音频直方图视频子源滤镜
+  audiobargraph_v        音频直方图视频子源滤镜
+  windrive               windrive
+  windrive               光盘
+  windrive               windrive
+  upnp                   通用即插即播（UPnP）
+  upnp                   通用即插即播（UPnP）
+  upnp                   通用即插即播（UPnP）
+  sap                    网络流 (SAP)
+  sap                    网络流 (SAP)
+  sap                    SDP 描述解析器
+  podcast                Podcast
+  podcast                Podcast
+  microdns               mDNS 网络发现
+  microdns               mDNS 网络发现
+  microdns               mDNS 渲染器发现
+  microdns               mDNS 网络发现
+  mediadirs              我的视频
+  mediadirs              我的音乐
+  mediadirs              我的图片
+  mediadirs              我的视频
+  vc1                    VC-1 封包器
+  mpegvideo              MPEG-I/II 视频封包器
+  mpegaudio              MPEG 音频层 I/II/III 封包器
+  mpeg4video             MPEG4 视频封包器
+  mpeg4audio             MPEG4 音频封包器
+  mlp                    MLP/TrueHD 解析器
+  hevc                   HEVC/H.265 视频封包器
+  h264                   H.264 视频封包器
+  flac                   Flac 音频封包器
+  dts                    DTS 音频封包器
+  dirac                  Dirac 封包器
+  copy                   复制封包器
+  a52                    A/52 音频封包器
+  wav                    WAV 混流器
+  mux_ts                 TS 混流器 (libdvbpsi)
+  ps                     PS 混流器
+  mux_ogg                Ogg/OGM 混流器
+  mpjpeg                 多帧 JPEG 混流器
+  mp4                    MP4/MOV 混流器
+  mp4                    分块流式 MP4 混流器
+  dummy                  dummy/raw 混流器
+  avi                    AVI 混流器
+  asf                    ASF 混流器
+  xml                    XML 解析器 (使用 libxml2)
+  xml                    XML 解析器 (使用 libxml2)
+  rtsp                   传统 RTSP VoD 服务器
+  stats                  统计数据编码器函数
+  stats                  统计数据解码器函数
+  stats                  统计数据解码器函数
+  stats                  统计数据解码器函数
+  stats                  统计数据分流函数
+  logger                 文件日志
+  gnutls                 GNU TLS 传输层安全
+  gnutls                 GNU TLS 服务器
+  fingerprinter          轨道指纹识别服务 (基于 Acoustid)
+  export                 export
+  export                 M3U 播放列表导出
+  export                 M3U8 播放列表导出
+  export                 XSPF 播放列表导出
+  export                 M3U 播放列表导出
+  audioscrobbler         将已播放的歌曲提交给 last.fm
+  vorepository           addons.videolan.org 插件查找器
+  vorepository           .vlp 独立包插件查找器
+  fsstorage              插件本地存储安装程序
+  fsstorage              插件本地存储查看程序
+  taglib                 taglib
+  taglib                 taglib
+  folder                 文件夹元数据
+  lua                    Lua 解析器
+  lua                    Lua HTTP
+  lua                    命令行界面
+  lua                    Lua Telnet
+  lua                    使用 lua 脚本装取元数据
+  lua                    使用 lua 脚本读取元数据
+  lua                    Lua 播放列表解析器界面
+  lua                    使用 lua 脚本装取封面
+  lua                    Lua 扩展
+  lua                    Lua SD 模块
+  lua                    Lua 解析器
+  file                   文件日志记录模块
+  console                控制台日志记录模块
+  memory                 密钥存储在内存中
+  file                   密钥存储在文件中，没有任何加密措施
+  file                   密钥加密存储在文件中
+  skins2                 可定制界面
+  skins2                 可定制界面
+  qt                     Qt 界面
+  qt                     Dialogs provider
+  qt                     Qt 界面
+  xa                     XA 分流器
+  wav                    WAV 分流器
+  voc                    VOC 分流器
+  vobsub                 Vobsub 字幕解析器
+  vc1                    VC1 视频分流器
+  ty                     TY 流音频/视频分流
+  tta                    TTA 分流器
+  ts                     MPEG 传输流（TS）分流器
+  subtitle               文本字幕解析器
+  smf                    SMF 分流器
+  sid                    C64 sid 分流器
+  real                   Real 分流器
+  rawvid                 raw 视频分流器
+  rawdv                  DV (数字视频) 分流器
+  rawaud                 raw 音频分流器
+  pva                    PVA 分流器
+  ps                     MPEG-PS 分流器
+  ps                     MPEG-PS 分流器
+  playlist               播放列表
+  playlist               导入 M3U 播放列表
+  playlist               RAM 播放列表导入
+  playlist               导入 PLS 播放列表
+  playlist               导入 B4S 播放列表
+  playlist               导入 DVB 播放列表
+  playlist               Podcast 解析器
+  playlist               导入 XSPF 播放列表
+  playlist               新版 winamp 5.2 shoutcast 导入
+  playlist               导入 ASX 播放列表
+  playlist               Kasenna 媒体库解析器
+  playlist               QuickTime 媒体链接导入器
+  playlist               dummy ifo 分流
+  playlist               iTunes 音乐库导入器
+  playlist               导入 WPL 播放列表
+  ogg                    OGG 分流器
+  nuv                    Nuv 分流器
+  nsv                    NullSoft 分流器
+  nsc                    Windows Media NSC 元分流
+  noseek                 阻止定位分流滤镜
+  mpgv                   MPEG-I/II 视频分流器
+  mpc                    MusePack 分流器
+  mp4                    MP4 串流分流器
+  mod                    MOD 分流器 (libmodplug)
+  mkv                    Matroska 串流分流器
+  mjpeg                  M-JPEG 摄像机分流器
+  image                  图像分流器
+  h26x                   H264 视频分流器
+  h26x                   HEVC/H.265 视频分流器
+  gme                    Game Music Emu
+  flacsys                FLAC 分流器
+  es                     MPEG-I/II/4 / A52 / DTS / MLP 音频
+  es                     MPEG-4 视频
+  directory              目录导入
+  diracsys               Dirac 视频分流器
+  demux_stl              EBU STL 字幕解析器
+  demux_chromecast       chromecast 分流封包器
+  demux_cdg              CDG 分流器
+  demuxdump              文件转储器
+  caf                    CAF 分流器
+  avi                    AVI 分流器
+  au                     AU 分流器
+  asf                    ASF/WMV 分流器
+  aiff                   AIFF 分流器
+  adaptive               用于 DASH/HLS 的统一自适应流
+  d3d9_filters           Direct3D9 调节滤镜
+  d3d9_filters           Direct3D9 deinterlace filter
+  d3d9_filters           Direct3D9 调节滤镜
+  d3d9_filters           Direct3D9 调节滤镜
+  d3d11_filters          Direct3D11 adjust filter
+  d3d11_filters          Direct3D11 deinterlace filter
+  d3d11_filters          Direct3D11 adjust filter
+  d3d11_filters          Direct3D11 adjust filter
+  win_msg                Windows 消息接口
+  win32                  全局热键接口
+  oldrc                  远程控制接口
+  ntservice              Windows 服务接口
+  netsync                网络同步
+  hotkeys                热键管理接口
+  gestures               鼠标手势控制接口
+  dummy                  dummy 界面
+  zvbi                   VBI 及 Teletext 解码器
+  x265                   H.265/HEVC 编码器 (x265)
+  x264                   H.264/MPEG-4 Part 10/AVC 编码器 (x264)
+  webvtt                 WEBVTT 字幕解码器
+  webvtt                 WEBVTT 字幕解析器
+  webvtt                 WEBVTT 字幕解析器
+  vpx                    WebM 视频解码器
+  vpx                    WebM 视频编码器
+  vorbis                 Vorbis 音频解码器
+  vorbis                 Vorbis 音频封包器
+  vorbis                 Vorbis 音频编码器
+  uleaddvaudio           Ulead DV 音频解码器
+  twolame                Libtwolame 音频解码器
+  ttml                   TTML 字幕解码器
+  ttml                   TTML 分流器
+  theora                 Theora 视频解码器
+  theora                 Theora 视频封包器
+  theora                 Theora 视频编码器
+  textst                 HDMV TextST 字幕解码器
+  t140                   T.140 文本编码器
+  svcdsub                Philips OGT (SVCD 字幕) 解码器
+  svcdsub                Philips OGT (SVCD 字幕) 封包器
+  subsusf                USF 字幕解码器
+  substx3g               tx3g 字幕解码器
+  subsdec                文本字幕解码器
+  stl                    EBU STL 字幕解码器
+  spudec                 DVD 字幕解码器
+  spudec                 DVD 字幕封包器
+  speex                  Speex 音频解码器
+  speex                  Speex 音频封包器
+  speex                  Speex 音频编码器
+  spdif                  S/PDIF 呈递解码器
+  sdl_image              SDL_image 视频解码器
+  scte27                 SCTE-27 解码器
+  scte18                 SCTE-18 解码器
+  schroedinger           Dirac 视频解码器，使用 libschroedinger
+  schroedinger           Dirac 视频编码器，使用 libschroedinger
+  rtpvideo               用于 RTP 的 raw 视频编码器
+  rawvideo               伪 raw 视频解码器
+  rawvideo               伪 raw 视频封包器
+  qsv                    Intel QuickSync Video 的 MPEG4-Part10/MPEG2 (亦作 H.264/H.262) 编码器
+  png                    PNG 视频解码器
+  png                    PNG 视频编码器
+  opus                   Opus 音频解码器
+  opus                   Opus 音频编码器
+  oggspots               OggSpots 视频解码器
+  oggspots               OggSpots 视频封包器
+  mpg123                 MPEG 音频解码器，使用 mpg123
+  mft                    Media Foundation Transform 解码器
+  mft                    Media Foundation Transform 解码器
+  lpcm                   线性 PCM 音频解码器
+  lpcm                   线性 PCM 音频封包器
+  lpcm                   线性 PCM 音频编码器
+  libmpeg2               MPEG I/II 视频解码器 (使用 libmpeg2)
+  libass                 使用 libass 渲染字幕
+  kate                   Kate 重叠解码器
+  jpeg                   JPEG 图像解码器
+  jpeg                   JPEG 图像编码器
+  g711                   G.711 解码器
+  g711                   G.711 编码器
+  fluidsynth             FluidSynth MIDI 合成器
+  flac                   Flac 音频解码器
+  flac                   Flac 音频编码器
+  faad                   AAC 音频解码器 (使用 libfaad2)
+  edummy                 dummy 编码器
+  dxva2                  DirectX 视频加速 (DXVA) 2.0
+  dvbsub                 DVB 字幕解码器
+  dvbsub                 DVB 字幕编码器
+  dmo                    DirectMedia Object 解码器
+  dmo                    DirectMedia Object 解码器
+  dmo                    DirectMedia Object 编码器
+  ddummy                 dummy 解码器
+  ddummy                 dummy 解码器
+  ddummy                 dummy 解码器
+  ddummy                 转储解码器
+  ddummy                 dummy 解码器
+  ddummy                 dummy 解码器
+  dca                    DTS 逻辑声学音频解码器
+  d3d11va                Direct3D11 视频加速
+  cvdsub                 超级 VCD（CVD）字幕解码器
+  cvdsub                 超级 VCD 字幕封包器
+  crystalhd              Crystal HD 硬件视频解码器
+  cdg                    CDG 视频解码器
+  cc                     隐藏式字幕（CC）解码器
+  avcodec                FFmpeg 音频/视频解码器
+  avcodec                FFmpeg 音频/视频解码器
+  avcodec                FFmpeg 音频/视频解码器
+  avcodec                FFmpeg 音频/视频编码器
+  avcodec                Avformat 分流器
+  avcodec                Avformat 混流器
+  avcodec                libavformat AVIO 访问
+  avcodec                libavformat AVIO 访问输出
+  avcodec                avparser 封包器
+  aribsub                ARIB 字幕解码器
+  araw                   raw/log 音频解码器
+  araw                   raw 音频解码器
+  aes3                   AES3/SMPTE 302M 音频解码器
+  aes3                   AES3/SMPTE 302M 音频封包器
+  adpcm                  ADPCM 音频解码器
+  a52                    ATSC A/52 (AC-3) 音频解码器
+  waveout                WaveOut 音频输出
+  wasapi                 Windows 音频会话 API 输出
+  mmdevice               Windows 多媒体设备（WMD）输出
+  directsound            DirectX 音频输出
+  directsound            DirectX 音频输出
+  amem                   音频内存输出
+  afile                  文件音频输出
+  adummy                 dummy 音频输出
+  integer_mixer          整数音频音量
+  float_mixer            单精度音频音量
+  ugly                   最近邻音频重采样器
+  ugly                   最近邻音频重采样器
+  trivial                副声道混音使用的音频滤镜
+  tospdif                用于 A/52/DTS->S/PDIF 封装的音频滤镜
+  stereo_widen           简单立体声增强效果
+  speex_resampler        Speex 重采样器
+  speex_resampler        Speex 重采样器
+  spatializer            音频声场定位器
+  spatialaudio           立体音效渲染器及双耳化器
+  spatialaudio           立体音效渲染器及双耳化器
+  simple_channel_mixer   用于简易声道混音的音频滤镜
+  scaletempo             音频速度缩放器，使音频与播放速度同步
+  scaletempo_pitch       音调变换器
+  samplerate             Secret Rabbit Code (libsamplerate) 重采样器
+  samplerate             Secret Rabbit Code (libsamplerate) 重采样器
+  remap                  音频声道重映射器
+  param_eq               参数均衡器
+  normvol                音量规格化
+  mono                   立体声转单声道缩混器
+  mad                    MPEG 音频层 I/II/III 解码器
+  karaoke                简易卡拉 OK 滤镜
+  headphone              耳机虚拟空间定位效果
+  gain                   增益控制滤镜
+  equalizer              10 波段均衡器
+  dolby                  杜比环绕声编码流的简易解码器
+  compressor             动态范围压缩器
+  chorus_flanger         声音延迟
+  audio_format           用于 PCM 格式转换的音频滤镜
+  audiobargraph_a        BarGraph 功能的音频部分
+  udp                    UDP 流输出
+  access_output_srt      SRT 流输出
+  access_output_shout    IceCAST 输出
+  access_output_livehttp HTTP Live 流输出
+  http                   HTTP 流输出
+  file                   文件流输出
+  dummy                  dummy 串流输出
+  vnc                    VNC 客户端访问
+  vdr                    VDR 录制
+  vcd                    VCD 输入
+  udp                    UDP 输入
+  timecode               时间码子画面基本流生成器
+  tcp                    TCP 输入
+  smb                    SMB 输入
+  shm                    共享的内存帧缓冲
+  sftp                   SFTP 输入
+  sdp                    会话描述协议
+  screen                 屏幕输入
+  satip                  SAT>IP 接收器插件
+  rtp                    实时协议 (RTP) 输入
+  nfs                    NFS 输入
+  live555                RTP/RTSP/SDP 分流器 (使用 Live555)
+  live555                RTSP/RTP 访问与分流
+  libbluray              蓝光光碟支持 (libbluray)
+  libbluray              BluRay demuxer
+  imem_access            内存内的流输入
+  idummy                 dummy 输入
+  http                   HTTP 输入
+  access                 HTTPS 输入
+  ftp                    FTP 输入
+  ftp                    FTP 上传输出
+  filesystem             文件输入
+  filesystem             文件输入
+  dvdread                DVDRead 输入 (无菜单支持)
+  dvdnav                 DVD 导航输入
+  dvdnav                 DVD 导航菜单分流器
+  dtv                    数字电视与广播
+  dshow                  DirectShow 输入
+  dshow                  DirectShow 输入
+  dcp                    数字影院节目包（DCP）模块
+  cdda                   音频 CD 输入
+  cdda                   音频 CD 输入
+  attachment             附件输入
+  wasapi                 Windows 音频会话 API 输入
+  access_srt             SRT 输入
+  access_realrtsp        Real RTSP
+  access_mms             Microsoft 媒体服务器 (MMS) 输入
+  imem                   内存输入
+  imem                   内存输入
+  concat                 串联输入
+  core                   主程序

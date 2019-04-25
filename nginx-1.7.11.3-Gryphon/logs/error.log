@@ -1,0 +1,63 @@
+2017/12/27 11:23:41 [emerg] 7896#7900: CreateFile() "D:\À—π∑∏ﬂÀŸœ¬‘ÿ\nginx 1.7.11.3-Gryphon/conf\nginx-win-rtmp.conf" failed (1113: No mapping for the Unicode character exists in the target multi-byte code page)
+2017/12/27 11:28:29 [notice] 7720#3396: sockinit() attempting to access sockapi
+2017/12/27 11:28:29 [notice] 7720#3396: Access to sockapi succeded!
+2017/12/27 11:28:29 [notice] 7720#3396: using sockapi from "4;8;"
+2017/12/27 11:28:29 [notice] 6276#3980: sockinit() attempting to access sockapi
+2017/12/27 11:28:29 [notice] 6276#3980: Access to sockapi succeded!
+2017/12/27 11:28:29 [notice] 6276#3980: using sockapi from "4;8;"
+2017/12/27 11:33:24 [error] 7720#5920: *3 CreateFile() "D:\nginx 1.7.11.3-Gryphon/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost:87"
+2017/12/27 11:37:34 [emerg] 5820#9116: CreateFile() "D:\nginx 1.7.11.3-Gryphon/conf/nginx.conf" failed (2: The system cannot find the file specified)
+2017/12/27 11:38:50 [notice] 6644#1288: signal process started (stop)
+2017/12/27 11:41:04 [notice] 7888#6728: sockinit() attempting to access sockapi
+2017/12/27 11:41:04 [notice] 7888#6728: Access to sockapi succeded!
+2017/12/27 11:41:04 [notice] 7888#6728: using sockapi from "4;8;"
+2017/12/27 11:41:04 [notice] 7784#8268: sockinit() attempting to access sockapi
+2017/12/27 11:41:04 [notice] 7784#8268: Access to sockapi succeded!
+2017/12/27 11:41:04 [notice] 7784#8268: using sockapi from "4;8;"
+2017/12/27 11:45:50 [notice] 3444#9412: signal process started (reload)
+2017/12/27 11:45:51 [notice] 9552#8804: sockinit() attempting to access sockapi
+2017/12/27 11:45:51 [notice] 9552#8804: Access to sockapi succeded!
+2017/12/27 11:45:51 [notice] 9552#8804: using sockapi from "4;8;"
+2017/12/27 11:45:51 [notice] 9568#8344: sockinit() attempting to access sockapi
+2017/12/27 11:45:51 [notice] 9568#8344: Access to sockapi succeded!
+2017/12/27 11:45:51 [notice] 9568#8344: using sockapi from "4;8;"
+2017/12/27 16:11:05 [error] 9552#9620: *9 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 17:09:47 [error] 9552#9620: *12 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 17:23:39 [error] 9568#9584: *14 CreateFile() "D:\nginx 1.7.11.3-Gryphon/html/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost:87"
+2017/12/27 17:25:25 [error] 9552#9620: *17 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 17:30:35 [error] 9552#9620: *20 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 17:34:39 [error] 9552#9620: *21 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 17:35:17 [error] 9552#9620: *22 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 17:37:29 [error] 9552#9620: *24 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 17:38:25 [error] 9552#9620: *25 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 17:39:21 [error] 9552#9620: *26 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 17:42:15 [error] 9552#9620: *27 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 17:43:30 [error] 9552#9620: *28 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 17:44:36 [error] 9552#9620: *29 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 17:44:56 [error] 9552#9620: *30 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 17:46:43 [error] 9552#9620: *31 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 17:56:48 [error] 9552#9620: *32 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 18:01:39 [error] 9552#9620: *33 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 18:04:40 [error] 9552#9620: *34 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 18:17:16 [error] 9552#9620: *35 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 18:21:27 [error] 9552#9620: *36 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 18:28:21 [error] 9552#9620: *37 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 18:35:19 [error] 9552#9620: *38 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 18:37:37 [error] 9552#9620: *39 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 18:40:34 [error] 9552#9620: *40 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 18:44:22 [error] 9552#9620: *41 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2017/12/27 18:46:09 [error] 9552#9620: *42 live: already publishing, client: 192.168.1.112, server: 0.0.0.0:1935
+2018/10/31 13:45:07 [emerg] 12108#236: CreateFile() "F:\nginx 1.7.11.3-Gryphon/conf/nginx.conf" failed (2: The system cannot find the file specified)
+2018/10/31 13:56:07 [notice] 7924#13444: sockinit() attempting to access sockapi
+2018/10/31 13:56:07 [notice] 7924#13444: Access to sockapi succeded!
+2018/10/31 13:56:07 [notice] 7924#13444: using sockapi from "4;88;"
+2018/10/31 13:56:07 [notice] 1372#7600: sockinit() attempting to access sockapi
+2018/10/31 13:56:07 [notice] 1372#7600: Access to sockapi succeded!
+2018/10/31 13:56:07 [notice] 1372#7600: using sockapi from "4;8;"
+2018/10/31 18:42:21 [notice] 2256#9940: Fatal: wait for sockapi failed
+2018/11/01 19:08:00 [notice] 6660#4680: sockinit() attempting to access sockapi
+2018/11/01 19:08:00 [notice] 6660#4680: Access to sockapi succeded!
+2018/11/01 19:08:00 [notice] 6660#4680: using sockapi from "136;160;"
+2018/11/01 19:08:00 [notice] 2336#6472: sockinit() attempting to access sockapi
+2018/11/01 19:08:00 [notice] 2336#6472: Access to sockapi succeded!
+2018/11/01 19:08:00 [notice] 2336#6472: using sockapi from "4;8;"

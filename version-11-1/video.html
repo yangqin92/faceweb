@@ -1,0 +1,354 @@
+<!-- 名称:人脸识别系统主页模块
+作者：杨琴
+开始时间：2018年8月1日
+版本：2018-11-1
+备注：1.修改人员显示信息栏为滚动显示方式
+    2.人员显示滚动自动在最底部
+    3.修改未知人员显示方式为默认头像，后台在收到未知人员的时候，同时传入了一个tag给前端，用来区别到底进来几个未知人员
+    4.利用nginx搭建web服务器，然后利用ffmpeg将rtsp转换为rtmp,最后再利用flowplayer这个flash将视频播放
+
+待改进：1.每次启动人脸识别系统都会有一条数据的误差-->
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- <style>
+    .css-scrollbar simple{
+
+        /* 隐藏溢出内容 属性内容会被修剪，其余内容不可见*/
+        /* overflow: hidden;*/
+        /* 滚动条显示溢出内容：内容会被修剪，但是浏览器会显示右边和下边滚动条来查看其余的内容*/
+        /* overflow: scroll; */
+        /* 自动处理溢出：如果内容被修改，但是浏览器会显示右边的滚动条来显示其余的内容*/
+        overflow: auto;
+    }
+</style> -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>人脸识别--video</title>
+<!--// Stylesheets //-->
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<link href="css/ddsmoothmenu.css" rel="stylesheet" type="text/css" />
+<link href="css/scrollbar.css" rel="stylesheet" type="text/css" />
+<!--// Javascript //-->
+<!-- <script type="text/javascript" src="js/jquery.min.js"></script> -->
+<script type="text/javascript" src="js/ddsmoothmenu.js"></script>
+<script type="text/javascript" src="js/menu.js"></script>
+<script type="text/javascript" src="js/contentslider.js"></script>
+<script type="text/javascript" src="js/jquery.1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery.lint.js"></script>
+<script type="text/javascript" src="js/jquery.scroll.js"></script>
+<script type="text/javascript" src="js/scroll.js"></script>
+<script type="text/javascript" src="js/jquery.idTabs.min.js"></script>
+<script type="text/javascript" src="js/switch.js"></script>
+<script type="text/javascript" src="js/tabs.js"></script>
+<script type="text/javascript" src="js/cufon-yui.js"></script>
+<script type="text/javascript" src="js/cufon.js"></script>
+<script type="text/javascript" src="js/font.js"></script>
+<script type="text/javascript" src="flowplayer-3.2.8.min.js"></script>
+<!--[if lte IE 7]><style>.comments .commentlinks{margin-left:250px;}
+.comments .singlebtn{margin-left:380px;}
+.comments ul li:hover .commentlinks{display:inline-block;}
+.comments ul li.level2:hover .commentlinks{margin-left:210px;}
+.comments ul li.level2:hover .singlebtn{margin-left:340px;}
+</style><![endif]--><!-- that's IT-->
+
+<script src="js/jquery-3.3.1.min.js"></script>
+
+</head>
+<body>
+<span class="biglines">&nbsp;</span>
+<!-- Wrapper -->
+<div id="wrapper_sec">
+	<!-- Top Section -->
+    <div class="top_sec">
+    	<!-- Top Section Left Links -->
+        <div class="toplinks">
+        	<ul>
+            	<li style="color: black">
+                <p href="" style="color: black">人脸识别系统</p></li>
+                <li style="color: black">
+                <a href="administrator.html" style="color: black">管理员</a></li>
+            </ul>
+        </div>
+        <!-- Top Section right Links -->
+        <!-- 上边框右侧，可添加其他功能-->
+        <div class="links_icons">
+        	<ul>
+            	<li><a href="login.html" style="color: black">退出</a></li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="clear"></div>
+
+    <!-- Header -->
+    <div id="masthead">
+
+    	<!-- Logo -->
+        <div class="logo">
+        	<img src="images/logo.png" alt="" /></a>
+        </div>
+
+        <!-- 功能栏 开关视频 人脸识别-->
+        <div class="navigation">
+        	<div id="smoothmenu1" class="ddsmoothmenu">
+                <!-- <button id="opencam" onclick="opencam()"> 打开摄像头</button>
+                <button id="closecam" onclick="closecam()"> 关闭摄像头</button>  -->
+                <button id="snap" > 启动人脸识别</button>       
+            	<div class="clear"></div>
+            </div>
+        </div> 
+    </div>
+    <div class="clear"></div>
+	<div class='videocon'>
+    <a  
+		href="#"
+		style="display:inline-block;width: 640px; height: 500px"
+		id="player" > 
+    </a>
+	<!--
+    <div id="paginate-slider2">
+        <div class="usual">
+            
+            <div id="idTab1" class="tabssection" style="visibility: visible;">
+            </div>   
+            
+          </div>
+    </div>
+	-->
+
+
+    <!-- Banner -->
+    <div id="banner">	
+        <!-- 此处插入视频插件 -->
+        <!-- <video id="video" width="600" height="500"  autoplay=""></video> -->
+      
+        <div id="paginate-slider2">
+        	<div class="usual">
+                <ul class="idTabs" >
+
+                  <li align="center"><a href="#" class="selected"  ><span >进出人员信息</span></a></li>
+
+                </ul>
+                <!-- 显示人员信息
+				-->
+                <div id="idTab1" class="tabssection" style="visibility: visible;">
+                    <div class="css-scrollbar simple" id="videoMessage"  style="overflow:auto;"></div>
+                </div>   
+                
+          	</div>
+
+			<div class="clear"></div>
+        </div>
+	</div>
+        <script type="text/javascript" src="js/banner.js"></script>
+    </div>
+    <div class="clear"></div>
+    <!-- END-->
+
+
+
+</div>
+
+<!-- JavaScript-->
+<script type="text/javascript">
+var ID=0 ;//服务器中保留的上次访问人员的ID
+var pid=0;//本次服务器中传来的访问人员的ID
+var unknownpid=0;//本次服务器传来的未知人员的ID
+var unknownID=0;
+var Time=0;//服务器中保存的访问时间
+var time;
+var count=0 ;//本次接收过来的访问时间
+var num ;
+var url;
+var i = 1;
+var j;
+var k = 0;
+var ajaxclienturl="http://192.168.0.14:3000/client" ;
+//var appid = 1;
+var personver={"appid":"1"};
+//启动人脸识别
+$(document).ready(function () {
+    $('#snap').click(function () {
+        //alert("jiuh");
+        c = window.setInterval("getResult()",100);
+    })    
+})    
+function getResult(){
+    $.ajax({
+
+        url:ajaxclienturl,
+        data:JSON.stringify(personver),
+        type:"POST",
+        datatype:"JSON",
+        success:function(data){
+    
+            var date = $.parseJSON(data);
+            
+            if (date['p_id']=="unknown!") {
+                //alert("comein")
+                url="./images/timg.png";
+                unknownpid=date['tag'];
+                if (unknownpid!=unknownID) {
+                    unknownID=unknownpid;
+                    var addDiv = document.createElement('div');
+                    addDiv.innerHTML = '<a href="#" class="toc" id="videoMessage'+ i +'"><span class="toc"><span class="thumb"><img src="'+ url +'" alt="" height="80" width="80" /></span><span class="desc"><span class="title" >未知人员进入</span><span class="title" >unknowntag：<span id="count'+ j +'">'+unknownpid+'</span></span></span></span></a>';
+                    $("#videoMessage").append(addDiv); 
+                    videoMessage.scrollTop = videoMessage.scrollHeight;
+                     i++;                    
+                }
+                                
+            }
+            else{
+                pid = date['p_id'];
+                //alert(pid);                
+                time= date['lasttime'];
+                count = date['count'];
+                //num=date['num'];
+                url=date['image'];
+                //url=url;
+                if (pid!=ID) {
+                    //alert("jiuy");
+                    ID=pid;
+                    Time=time;                            
+                    //if (i != 1 && (i-1)%4 == 0) {
+                    //     k = (i-1)/4;
+                    // }
+                    // j = i - 4*k;
+       
+                    // if ( i <= 4 ) {
+                        var addDiv = document.createElement('div');
+                        addDiv.innerHTML = '<a href="#" class="toc" id="videoMessage'+ i +'"><span class="toc"><span class="thumb"><img src="'+ url +'" alt="" height="80" width="80" /></span><span class="desc"><span class="title" >ID：<span id="ID'+ j +'">'+ ID +'</span></span><span class="title" >上次访问时间：<span id="time'+ j +'">'+ Time +'</span></span><span class="title" >访问次数：<span id="count'+ j +'">'+count+'</span></span></span></span></a>';
+                        $("#videoMessage").append(addDiv); 
+                        videoMessage.scrollTop = videoMessage.scrollHeight;
+                        i++;    
+                    //}
+                    // else if ( i > 4 ) {
+                    //     var vedio = document.getElementById('videoMessage'+ (i-4));
+                    //     vedio.parentNode.removeChild(vedio);
+                    //     var addDiv = document.createElement('div');
+                    //     addDiv.innerHTML = '<a href="#" class="toc" id="videoMessage'+ i +'"><span class="thumb"><img src="'+ url +'" alt="" /></span><span class="desc"><span class="title" >ID：<span id="ID'+ j +'">'+ ID +'</span></span><span class="title" >上次访问时间：<span id="time'+ j +'">'+ Time +'</span></span><span class="title" >访问次数：<span id="count'+ j +'">'+count+'</span></span></span></span></a>';
+                    //     $("#videoMessage").append(addDiv);            
+                    //     i++;   
+                    // }
+                }
+                else {
+                    if (time!=Time) {
+                        Time=time;
+                        ID=pid;
+                        // if (i != 1 && (i-1)%4 == 0) {
+                        // k = (i-1)/4;
+                        // }
+                        // j = i - 4*k;
+       
+                        // if ( i <= 4 ) {
+                            var addDiv = document.createElement('div');
+                            addDiv.innerHTML = '<a href="#" class="toc" id="videoMessage'+ i +'"><span class="toc"><span class="thumb"><img src="'+ url +'" alt="" height="80" width="80" /></span><span class="desc"><span class="title" >ID：<span id="ID'+ j +'">'+ ID +'</span></span><span class="title" >上次访问时间：<span id="time'+ j +'">'+ Time +'</span></span><span class="title" >访问次数：<span id="count'+ j +'">'+count+'</span></span></span></span></a>';
+                            $("#videoMessage").append(addDiv);
+                            videoMessage.scrollTop = videoMessage.scrollHeight; 
+                            i++;    
+                    //     }
+                    //     else if ( i > 4 ) {
+                    //         var vedio = document.getElementById('videoMessage'+ (i-4));
+                    //         vedio.parentNode.removeChild(vedio);
+                    //         var addDiv = document.createElement('div');
+                    //         addDiv.innerHTML = '<a href="#" class="toc" id="videoMessage'+ i +'"><span class="thumb"><img src="'+ url +'" alt="" /></span><span class="desc"><span class="title" >ID：<span id="ID'+ j +'">'+ ID +'</span></span><span class="title" >上次访问时间：<span id="time'+ j +'">'+ Time +'</span></span><span class="title" >访问次数：<span id="count'+ j +'">'+count+'</span></span></span></span></a>';
+                    //         $("#videoMessage").append(addDiv);            
+                    //         i++;   
+                    //    }
+                        
+                    }
+                }
+            }            
+        },
+    });
+}
+// function opencam() {
+    
+//     var video = document.getElementById("video");
+//     // alert("enter");
+//     //获取摄像头对象
+//     navigator.getUserMedia=navigator.getUserMedia||navigator.webkitGetUserMedia||navigator.mozGetUserMedia||navigator.msGetUserMedia;
+
+//     navigator.getUserMedia({video:true,audio: true},gotStream,noStream);//打开摄像头
+
+//     //成功打开摄像头
+
+//     function gotStream(stream){
+//         mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
+//         mediaStreamTrack_a = typeof stream.stop === 'function' ? stream : stream.getTracks()[0];
+//         video.src =URL.createObjectURL(stream);
+
+//         video.onerror= function()
+//         {
+//             stream.stop();
+
+//         }
+//         stream.onended = noStream;
+
+//         video.onloadedmetadata =function()
+//         {
+//             alert("成功打开摄像头");
+//             var beginflag={"appid":"ZQKJ2018"};
+//             alert(beginflag);
+//             $.ajax({
+//                 url:"http://192.168.0.14:5000/vms/facedetect",
+//                 data:JSON.stringify(beginflag),
+//                 type:"POST",
+//                 datatype:"JSON",
+//                 success:function(data){
+//                     // var date = $.parseJSON(data);
+//                     // pid = date['p_id'];
+//                     // //Time= date['lasttime'];
+//                     // count = date['count'];
+//                     // //num=date['num'];
+//                     // //url=date['url'];
+//                     // if (pid!=ID) {
+//                     //     ID=pid;
+//                     //     var addDiv = document.createElement('div');
+//                     //     addDiv.innerHTML = 'ID：<span >'+ ID +'</span>访问次数：<span >'+count+'</span>';
+//                     //     $("#videoMessage").append(addDiv);  
+//                     // }
+
+
+//                     alert('成功启动人脸识别系统！')
+//                 },
+//             });
+
+//         };
+
+//     }   
+//     //打开摄像头失败
+
+//     function noStream(error){
+//         alert(error);
+//     }
+// }
+// //关闭摄像头
+// function closecam(){
+//     i=0;
+//     $("#videoMessage").empty();
+//     mediaStreamTrack && mediaStreamTrack.stop();
+//     mediaStreamTrack_a && mediaStreamTrack_a.stop();
+// }
+
+flowplayer("player", "flowplayer-3.2.8.swf",{ 
+		clip: { 
+          url: 'rtmp://192.168.0.14:1935/live/test2', 
+          //192.168.0.180是本机的ip地址，1935和live
+		  provider: 'rtmp',
+		  live: true, 
+		},  
+		plugins: {  
+		   rtmp: {  
+			 url: 'flowplayer.rtmp-3.2.8.swf',  
+			 netConnectionUrl: 'rtmp://192.168.0.14:1935/live/test2' 
+           } 
+	   } 
+});
+</script>
+
+</body>
+</html>

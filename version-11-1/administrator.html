@@ -1,0 +1,1326 @@
+<!-- 名称：人脸识别系统数据库模块
+作者：杨琴
+开始日期：2018年8月1日
+版本：2018-11-1
+备注：
+    1.基于谷歌浏览器的开发，浏览器版本为61
+    2.涉及到跨域访问，需要两个扩展程序，Allow-Control-Allow-Origin: *1.0.3和CORS0.1.2
+    3.将post的url地址设置成全局变量
+    3.人脸录入模块，利用了腾讯云对象存储时，照片下载时的URL改为无签名方式，避免了403拒绝访问的错误
+    4.初始化时，将黄君毅的那一行示例进行了隐藏，人脸搜索时，再将那一层div显示，然后将搜索到的结果覆盖原来的结果
+    5.人脸修改操作时，进行了改进，分了两种情况，当对人脸有修改时，将新的人脸上传到腾讯云上，返回给后台新的人脸地址，否则直接将本来地址传给后台，修改了不对人脸修改而带来的空错误
+    6.删除人脸时，本来已经删除的那条信息还会出现在界面上，容易造成误操作，现在修改为删除成功的同时,将那个div进行了隐藏
+    7.此版本目前未出现任何问题
+待改进：
+    1.人脸修改时，点击修改时，会出现未加载完成或者缓存的情况
+    2.人脸删除时，其实可以在云服务器上也删除对象
+    3.管理员和统计部分待完成
+    4.人员录入成功的同时，添加照片处，会有上一次添加的图片的名称
+   -->
+
+
+<!doctype html>
+<html lang="ch">
+
+    <head>
+           
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="format-detection" content="telephone=no">
+        <title>人脸识别--管理员</title>
+        <script src="js2/jquery.min.js"></script>
+        <script src="js2/bootstrap.min.js"></script>
+        <script>
+            $(function() {
+                $(".meun-item").click(function() {
+                    $(".meun-item").removeClass("meun-item-active");
+                    $(this).addClass("meun-item-active");
+                    var itmeObj = $(".meun-item").find("img");
+                    itmeObj.each(function() {
+                        var items = $(this).attr("src");
+                        items = items.replace("_grey.png", ".png");
+                        items = items.replace(".png", "_grey.png")
+                        $(this).attr("src", items);
+                    });
+                    var attrObj = $(this).find("img").attr("src");
+                    ;
+                    attrObj = attrObj.replace("_grey.png", ".png");
+                    $(this).find("img").attr("src", attrObj);
+                });
+                $("#topAD").click(function() {
+                    $("#topA").toggleClass(" glyphicon-triangle-right");
+                    $("#topA").toggleClass(" glyphicon-triangle-bottom");
+                });
+                $("#topBD").click(function() {
+                    $("#topB").toggleClass(" glyphicon-triangle-right");
+                    $("#topB").toggleClass(" glyphicon-triangle-bottom");
+                });
+                $("#topCD").click(function() {
+                    $("#topC").toggleClass(" glyphicon-triangle-right");
+                    $("#topC").toggleClass(" glyphicon-triangle-bottom");
+                });
+                $(".toggle-btn").click(function() {
+                    $("#leftMeun").toggleClass("show");
+                    $("#rightContent").toggleClass("pd0px");
+                })
+            })
+        </script>
+<!--[if lt IE 9]>
+  <script src="js/html5shiv.min.js"></script>
+  <script src="js/respond.min.js"></script>
+<![endif]-->
+        
+        
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" >
+        <link rel="stylesheet" type="text/css" href="css/common.css" />
+        <link rel="stylesheet" type="text/css" href="css/slide.css" />
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/flat-ui.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/jquery.nouislider.css">
+
+        
+
+        <!-- 添加的JS-->
+        <style>
+        .image{
+            height: 250px;
+        }
+        .image1{
+            width: 550;
+        }
+        img.vip{
+            position:relative;
+            left:-850px;
+            top:10px;
+        }
+        .page-container{ 
+            padding:15px
+        }
+        </style>
+        <script language="javascript"></script>
+        <script src="./cos-js-sdk-v5-master/dist/cos-js-sdk-v5.js" type="text/javascript" charset="utf-8"></script>
+		<!--改<script src="./jquery-1.11.2.min.js" type="text/javascript" charset="utf-8"></script>-->
+    </head>
+
+    <body>
+        <div id="wrap">
+            <!-- 左侧菜单栏目块 -->
+            <div class="leftMeun" id="leftMeun">
+                <div id="logoDiv">
+                    <p id="logoP"><img id="logo" src="images/logo (2).png"><span>管理员操作界面</span></p>
+                </div>
+
+                <div id="personInfor">
+                    <p id="userName">GAWAIN</p>
+                    <p><a href="login.html">退出登录</a></p>
+                </div>
+                <div class="meun-item meun-item-active" href="#peopleManagement" aria-controls="char" role="tab" data-toggle="tab"><img src="images/icon_chara_grey.png">人员管理</div>
+                <div class="meun-item" href="#peopleEntry" aria-controls="chan" role="tab" data-toggle="tab"><img src="images/icon_change_grey.png">人员录入</div>   
+                <div class="meun-item" href="#statisticInfo" aria-controls="scho" role="tab" data-toggle="tab"><img src="images/icon_house_grey.png">统计信息</div>                
+                <div class="meun-item " href="#administratorInfo" aria-controls="sour" role="tab" data-toggle="tab"><img src="images/icon_source.png">管理员信息 </div>
+                <!--
+                <div class="meun-item" href="#ruleManagement" aria-controls="regu" role="tab" data-toggle="tab"><img src="images/icon_rule_grey.png">规则管理</div>
+                -->
+            </div>
+
+            <!-- 右侧具体内容栏目 -->
+            <div id="rightContent">
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <!-- 人员管理模块 -->
+                  <div role="tabpanel" class="tab-pane active" id="peopleManagement">
+                    <div class="check-div form-inline">
+                        <div class="col-xs-4">
+                            <!--
+                            <button class="btn btn-yellow btn-xs" data-toggle="modal" data-target="#addSource">添加进出人员</button>
+                            -->
+                        </div>
+
+                        <div  class="col-xs-6"> 
+                            <input type="text" class="form-control input-sm" placeholder="输入id进行搜索" id="PMSearchinput">
+                            <button class="btn btn-success radius" id="PMSearchbut" name="PMSearchbut" style="width:120px;">搜索</button>
+                        </div> 
+                        <!-- <div  class="col-xs-1">                            
+                            总共<span id="PMSearchNum" style="color: red">1</span>条信息
+                        </div>  -->
+                    </div>
+
+
+
+                        <div class="data-div">
+                            <div class="row tableHeader">
+                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 ">
+                                    ID
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                    名称
+                                </div>
+                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                    备注
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                    操作
+                                </div>
+                            </div>
+
+                            <div class="tablebody" id="PMMessage">
+
+                            	<!--人员信息行-->
+                              <div id="PMM" style="display: none;" >
+                                <div class="row" >
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" >
+                                        <span id="PMMessageID">13572850223</span>
+                                    </div>
+                                    <div id="topAD" class="col-lg-4 col-md-4 col-sm-4 col-xs-4" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSystem" aria-expanded="true" aria-controls="collapseOne">
+                                        <span id="topA" class="glyphicon  glyphicon-triangle-right  "></span> <span id="PMMessageName">黄君毅</span>
+                                    </div>
+                                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                        <span id="PMMessageRemark">2018年10月27日</span>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        <button class="btn btn-success btn-xs" data-toggle="modal" data-target="#changeSource" ><span class="PMC" id="PM">修改</span></button>
+                                        <button class="btn btn-danger btn-xs" data-toggle="modal" data-target="#deleteSource" ><span class="PMR" id="PMM">删除</span></button>
+                                    </div>
+                                </div>
+
+                                <!--人员详细信息展开-->
+
+                                <div id="collapseSystem" class="collapse" aria-expanded="false" >
+                                    <div style="padding: 50px 0;margin-top: 50px;background-color: #fff; text-align: right;width: 1000px;height:300px;margin: 10px auto;">
+                                      <img class="vip" src="./images/timg.png" alt="Google Chrome" width="100" height="100" id="PMMimage">   
+                                                                            
+                                    </div>
+                                </div>  
+                              </div>
+
+                            </div>
+                        </div>
+
+                        <!--页码块-->
+                        <!-- <footer class="footer">
+                            <ul class="pagination">
+                                <li>
+                                    <select>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                        <option>6</option>
+                                        <option>7</option>
+                                        <option>8</option>
+                                        <option>9</option>
+                                        <option>10</option>
+                                    </select>
+                                    页
+                                </li>
+                                <li class="gray">
+                                    共20页
+                                </li>
+                                <li>
+                                    <i class="glyphicon glyphicon-menu-left">
+                                    </i>
+                                </li>
+                                <li>
+                                    <i class="glyphicon glyphicon-menu-right">
+                                    </i>
+                                </li>
+                            </ul>
+                        </footer> -->
+
+                        <!--添加进出人员-->
+                        <div class="modal fade" id="addSource" role="dialog" aria-labelledby="gridSystemModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="gridSystemModalLabel">添加进出人员</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            <form class="form-horizontal">
+                                                <div class="form-group ">
+                                                    <label for="sName" class="col-xs-3 control-label">姓名：</label>
+                                                    <div class="col-xs-8 ">
+                                                        <input type="email" class="form-control input-sm duiqi" id="PMAddName" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="sLink" class="col-xs-3 control-label">ID：</label>
+                                                    <div class="col-xs-8 ">
+                                                        <input type="" class="form-control input-sm duiqi" id="PMAddID" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="sOrd" class="col-xs-3 control-label">备注：</label>
+                                                    <div class="col-xs-8">
+                                                        <textarea class="form-control input-sm duiqi" id="PMAddRemark"></textarea>
+                                                    </div>
+                                                </div>
+                                                
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消</button>
+                                        <button type="button" class="btn btn-xs btn-xs btn-green" id="PMAddbut" >确定</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+
+                        <!--修改人员信息-->
+                        <div class="modal fade" id="changeSource" role="dialog" aria-labelledby="gridSystemModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="gridSystemModalLabel">修改信息</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            <form class="form-horizontal">
+                                                <div class="form-group ">
+                                                    <label for="sName" class="col-xs-3 control-label">姓名：</label>
+                                                    <div class="col-xs-8 ">
+                                                        <input type="email" class="form-control input-sm duiqi" id="PMChangeName" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="form-group">
+                                                    <label for="sLink" class="col-xs-3 control-label">ID：</label>
+                                                    <div class="col-xs-8 ">
+                                                        <input type="" class="form-control input-sm duiqi" id="PMChangeID" placeholder="">
+                                                    </div>
+                                                </div> -->
+                                                <div class="form-group">
+                                                    <label for="sOrd" class="col-xs-3 control-label">备注：</label>
+                                                    <div class="col-xs-8">
+                                                        <textarea class="form-control input-sm duiqi" id="PMChangeRemark"></textarea>
+                                                    </div>
+                                                </div> 
+                                                <div class="form-group">
+                                                    <label for="sOrd" class="col-xs-3 control-label">照片：</label>
+                                                    <div class="col-xs-8">
+                                                        <input type="file" id="choosephoto"/>
+                                                        <img src=""  id="changephoto"  width="130" height="150"/> 
+                                                    </div>
+                                                </div>                                      
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                                        <button type="button" class="btn btn-xs btn-green" id="PMChangebut" data-dismiss="modal">确定</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+
+
+                        <!--删除进出人员信息-->
+                        <div class="modal fade" id="deleteSource" role="dialog" aria-labelledby="gridSystemModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="gridSystemModalLabel">提示</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            确定要删除该信息？删除后不可恢复！
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                                        <button type="button" class="btn btn-xs btn-danger" id="PMRemovebut" data-dismiss="modal">确定</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+                    </div>
+
+
+
+
+
+
+
+
+                    <!-- 管理员信息模块 -->
+                    <div role="tabpanel" class="tab-pane" id="administratorInfo">
+
+                    <div class="check-div form-inline">
+                        <div class="col-xs-4">
+                            <button class="btn btn-yellow btn-xs" data-toggle="modal" data-target="#addChar">添加管理员 </button>
+                        </div>
+
+
+                        <div class="col-xs-6">                                               
+                            <input type="text" class="form-control input-sm" placeholder="输入id进行搜索" id="AISearchinput">
+                            <button type="submit" class="btn btn-success radius" id="AISearchbut" name="AISearchbut" style="width:120px;"> 搜索</button>                            
+                        </div> 
+                        <div class="col-xs-1">                           
+                            总共<span id="AISearchNum" style="color: red">1</span>条信息
+                        </div>  
+                    </div>
+
+
+
+                        <div class="data-div">
+                            <div class="row tableHeader">
+                                <div class="col-xs-1 ">
+                                    ID
+                                </div>
+                                <div class="col-xs-4">
+                                    名称
+                                </div>
+                                <div class="col-xs-5">
+                                    备注
+                                </div>
+                                <div class="col-xs-2">
+                                    操作
+                                </div>
+                            </div>
+                            <div class="tablebody">
+                                 <div class="row">
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                        1
+                                    </div>
+                                    <div id="topCD" class="col-lg-4 col-md-4 col-sm-4 col-xs-4" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSyste" aria-expanded="true" aria-controls="collapseOne">
+                                        <span id="topC" class="glyphicon  glyphicon-triangle-right  "></span> <span>黄君毅</span>
+                                    </div>
+                                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                        2018年10月27日
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                        <button class="btn btn-success btn-xs" data-toggle="modal" data-target="#changeChar">修改</button>
+                                        <button class="btn btn-danger btn-xs" data-toggle="modal" data-target="#deleteChar">删除</button>
+                                    </div>
+                                </div>
+
+                                 <div id="collapseSyste" class="collapse" aria-expanded="false">
+                                    <div style="padding: 50px 0;margin-top: 50px;background-color: #fff; text-align: right;width: 1000px;height:300px;margin: 10px auto;">
+                                      <img class="vip" src="./images/timg.png" alt="Google Chrome" width="100" height="100" >   
+                                     
+                                       <label class="col-xs-4 control-label">姓名：</label>
+                                       <div class="col-xs-5">
+                                       <span style="float:left; position: relative; bottom: -4px;left: -20px;">黄君毅</span>
+                                      </div>
+                                      <label  class="col-xs-4 control-label" style="position:relative; top:-60px;">I&nbsp;&nbsp;D：</label>
+                                       <div class="col-xs-5" style="position: relative;top: -60px;">
+                                      <span style="float:left; position: relative; bottom: -4px;left: -20px;">2161601009</span>
+                                      </div> 
+                                      <label  class="col-xs-4 control-label" style="position:relative; left: -333px;top:-45px;">地址：</label>
+                                      <div class="col-xs-5" style="position: relative; top:-79px;left: 345px;">
+                                      	<span style="position: relative;left: -32px;float: left;">碑林区</span></div>
+                                       <label  class="col-xs-4 control-label" style="position:relative; left: -416px;top:-45px;">电话号码：</label>
+                                       <div class="col-xs-5" style="position: relative; top:-79px;left: 345px;">
+                                       	<span style="position: relative;left: -32px;float: left;">13678297544</span></div>
+                                       	<label  class="col-xs-4 control-label" style="position:relative; left: -416px;top:-45px;">备注：</label>
+                                       	 <div class="col-xs-5" style="position: relative; top:-79px;left: 345px;">
+                                       	<span style="position: relative;left: -32px;float: left;">经常出现</span></div>
+
+
+                                    </div>
+
+                                </div>
+                       
+                    </div>
+
+                </div>
+                <!--页码块-->
+                <!-- <footer class="footer">
+                    <ul class="pagination">
+                        <li>
+                            <select>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                                <option>9</option>
+                                <option>10</option>
+                            </select>
+                            页
+                        </li>
+                        <li class="gray">
+                            共20页
+                        </li>
+                        <li>
+                            <i class="glyphicon glyphicon-menu-left">
+                            </i>
+                        </li>
+                        <li>
+                            <i class="glyphicon glyphicon-menu-right">
+                            </i>
+                        </li>
+                    </ul>
+                </footer> -->
+                        <!--添加管理员-->
+                        <div class="modal fade" id="addChar" role="dialog" aria-labelledby="gridSystemModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="gridSystemModalLabel">添加信息</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            <form class="form-horizontal">
+                                                <div class="form-group ">
+                                                    <label for="sName" class="col-xs-3 control-label">姓名：</label>
+                                                    <div class="col-xs-8 ">
+                                                        <input type="email" class="form-control input-sm duiqi" id="AIAddName" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="sLink" class="col-xs-3 control-label">ID：</label>
+                                                    <div class="col-xs-8 ">
+                                                        <input type="" class="form-control input-sm duiqi" id="AIAddID" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="sOrd" class="col-xs-3 control-label">备注：</label>
+                                                    <div class="col-xs-8">
+                                                        <textarea class="form-control input-sm duiqi" id="AIAddRemark"></textarea>
+                                                    </div>
+                                                </div>                                                   
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消</button>
+                                        <button type="button" class="btn btn-xs btn-xs btn-green" id="AIAddbut">确定</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+
+
+                         <!--修改管理员信息-->
+                        <div class="modal fade" id="changeChar" role="dialog" aria-labelledby="gridSystemModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="gridSystemModalLabel">修改管理员信息</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            <form class="form-horizontal">
+                                                <div class="form-group ">
+                                                    <label for="sName" class="col-xs-3 control-label">姓名：</label>
+                                                    <div class="col-xs-8 ">
+                                                        <input type="email" class="form-control input-sm duiqi" id="AIChangeName" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="sLink" class="col-xs-3 control-label">ID：</label>
+                                                    <div class="col-xs-8 ">
+                                                        <input type="" class="form-control input-sm duiqi" id="AIChangeID" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="sOrd" class="col-xs-3 control-label">备注：</label>
+                                                    <div class="col-xs-8">
+                                                        <textarea class="form-control input-sm duiqi" id="AIChangeRemark"></textarea>
+                                                    </div>
+                                                </div>                                       
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                                        <button type="button" class="btn btn-xs btn-green" id="AIChangebut">确定</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+
+
+                <!--删除管理员-->
+                <div class="modal fade" id="deleteChar" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">提示</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    确定要删除该权限？删除后不可恢复！
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-xs btn-white" data-dismiss="modal">取 消</button>
+                                <button type="button" class="btn btn-xs btn-danger" id="AIRemovebut">确定</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- 人员录入模块 -->
+            <div role="tabpanel" class="tab-pane" id="peopleEntry">
+                <div class="check-div">
+                    人员录入
+                </div>
+                <div style="padding: 50px 0;margin-top: 50px;background-color: #fff; text-align: right;width: 1100px; height: 600px;  margin: 20px auto;">
+                	
+                    <img  src="./images/timg.png" alt="Google Chrome" width="120" height="150" style="position: relative;right: 870px;" id="imgWait" />
+                    
+                    <div class="col-xs-4" style="position: relative;top: 165px; left: 118px;">
+                        <input type="file" id="file1" class="btn  btn-xs" data-toggle="modal" />                    
+                    </div>
+
+                   
+
+                   
+                    <div class="modal-body" style="position: relative;bottom: 165px;left: 200px;">
+                        <div class="container-fluid">
+                            <form class="form-horizontal">
+                                <div class="form-group ">
+                                    <label for="PEName" class="col-xs-3 control-label">姓名：</label>
+                                    <div class="col-xs-8 ">
+                                        <input  class="form-control input-sm duiqi" id="PEName" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="PEID" class="col-xs-3 control-label">ID：</label>
+                                    <div class="col-xs-8 ">
+                                        <input type="" class="form-control input-sm duiqi" id="PEID" placeholder="">
+                                    </div>
+                                </div> 
+                                <div class="form-group">
+                                    <label for="PERemark" class="col-xs-3 control-label">备注：</label>
+                                    <div class="col-xs-3">
+                                        <textarea rows="3" class="form-control input-sm duiqi" cols="50" id="PERemark"></textarea>
+                                    </div>
+                                </div>                                         
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-xs-3" style="position: relative;top: -158px;left: 390px;">
+                        <button class="btn btn-yellow btn-xs" data-toggle="modal"  style="font-size: 15px;" id="PECancle">取消 </button>
+                        <button class="btn btn-green btn-xs" data-toggle="modal"  style="font-size: 15px;" id="PESubmit">提交 </button>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+            <!--统计信息-->
+            <div role="tabpanel" class="tab-pane" id="statisticInfo">
+
+                <div class="row tableHeader">
+                    <div >统计信息</div>
+                </div>
+                <div >
+                    <div class="col-xs-3" style="float:left;width: 550px; height: 300px" id="everyDay"></div>
+                    <div class="col-xs-3" style="float:left;width: 550px; height: 300px" id="everyWeek"></div>
+                    <div class="col-xs-3" style="float:left;width: 550px; height: 300px" id="everyMonth"></div>
+                    <div style="clear:both"></div>
+                </div>
+
+                <!--
+                <div class="data-div">
+                    <div class="row tableHeader">
+                        <div >统计信息</div>
+                    </div>
+
+                    <div class="image tablebody">
+                        <div class="col-xs-3-1 ">
+                            <img src="images/timg.png" width="300" height="200">
+                            <div>
+                                <span>每日信息</span>
+                            </div>
+                        
+                        </div>
+
+                        <div class="col-xs-3-1 ">
+                            <img src="images/timg.png" width="300" height="200">
+                            <div>
+                                <span>每周信息</span>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-3-1 ">
+                            <img src="images/timg.png" width="300" height="200">
+                            <div>
+                                  <span>每月信息</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                -->
+
+            
+                <div class="row tableHeader">
+                    <div ></div>
+                </div>
+                
+                <div class="check-div form-inline">
+                    
+                    <div class="col-xs-3">
+                        
+                    </div>
+                    <div class="col-xs-7" > 
+                        日期范围：
+                        <input type="text" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" id="datemin" class="form-control input-sm" style="width:200px;" placeholder="开始时间">
+                        -
+                        <input type="text" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" id="datemax" class="form-control input-sm" style="width:200px;" placeholder="结束时间">                       
+                        <button type="submit" class="btn btn-success radius" id="statisticSearchBut" name="collectbut" style="width:120px;"> 搜索</button>                         
+                    </div>  
+                    <div class="col-xs-1">
+                        总共<span id="statisticSearchNum" style="color: red">1</span>条信息
+                    </div> 
+                </div>
+
+                <div class="data-div">
+                    <div class="row tableHeader">
+                        <div class="col-xs-3 ">
+                            ID
+                        </div>
+                        <div class="col-xs-3">
+                            姓名
+                        </div>
+                        <div class="col-xs-3">
+                            时间
+                        </div>
+                        <div class="col-xs-2">
+                            随行人数
+                        </div>                       
+                    </div>
+                </div>
+
+                <div class="tablebody" id="statisticAddPeople">
+                    <div class="row">
+                        <div class="col-xs-3 ">
+                            6426398978
+                        </div>
+                        <div class="col-xs-3">
+                            邓超
+                        </div>
+                        <div class="col-xs-3">
+                            2018-06-02
+                        </div>
+                        <div class="col-xs-2">
+                            24
+                        </div>                           
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="js2/jquery.nouislider.js"></script>
+<script>
+function huadong(my, unit, def, max) {
+    $(my).noUiSlider({
+        range: [0, max],
+        start: [def],
+        handles: 1,
+        connect: 'upper',
+        slide: function() {
+            var val = Math.floor($(this).val());
+            $(this).find(".noUi-handle").text(
+                val + unit
+            );
+            console.log($(this).find(".noUi-handle").parent().parent().html());
+        },
+        set: function() {
+            var val = Math.floor($(this).val());
+            $(this).find(".noUi-handle").text(
+                val + unit
+            );
+        }
+    });
+    $(my).val(def, true);
+}
+huadong('.slider-minmax1', "分钟", "5", 30);
+huadong('.slider-minmax2', "分钟", "6", 15);
+huadong('.slider-minmax3', "分钟", "10", 60);
+huadong('.slider-minmax4', "次", "2", 10);
+huadong('.slider-minmax5', "天", "3", 7);
+huadong('.slider-minmax6', "天", "8", 10);
+</script>
+
+
+<!-- 人员管理JS-->
+<script type="text/javascript">
+
+
+//修改操作
+var posturl="http://192.168.0.14:5000";
+var PMMessageName; 
+var PMMessageRemark;
+var PM;
+var selectedFile2;
+var filename2;
+var urlObject2;
+var flag=0;//修改时是否对照片进行了修改，默认为无
+$(document).ready(function(){
+    $("#choosephoto").change(function(){
+        var current_pic=this.files[0];
+        preview_picture2(current_pic);
+        selectedFile2 = document.getElementById('choosephoto').files[0];
+	 	filename2 = selectedFile2.name;
+        flag=1;
+    });
+});
+               
+function preview_picture2(pic){
+    var r=new FileReader();
+    r.readAsDataURL(pic);
+    r.onload=function(e){
+        $("#changephoto").attr("src",this.result).show();    
+    };
+}
+$(document).ready(function () {
+    // body... 
+    //获取当前行信息 
+    $("#PM").click(function () {
+        PMMessageID = document.getElementById('PMMessageID').innerHTML;
+        PMMessageName = document.getElementById('PMMessageName').innerHTML;
+        PMMessageRemark = document.getElementById('PMMessageRemark').innerHTML;
+        PMMessagePhoto = document.getElementById('PMMimage').src;
+        //alert(PMMessageName);
+        //alert(PMMessagePhoto);
+        //document.getElementById('PMChangeID').value = PMMessageID;
+        document.getElementById('changephoto').src = PMMessagePhoto;
+        document.getElementById('PMChangeName').value = PMMessageName;
+        document.getElementById('PMChangeRemark').innerHTML = PMMessageRemark; 
+    })
+
+    $(document).ready(function () {
+        //修改提交
+        $("#PMChangebut").click(function () {
+
+            
+            //alert(filename2);
+            //对照片也进行了修改
+            if (flag==1) {
+                //alert(flag);
+                var cos = new COS({
+	                SecretId: 'AKIDZ3RLBwc7ZsEVfgTgWKwW1HBxukU5qq1F',
+                    SecretKey: 'NchiihZQE35sXBLSPDJJMKDzmnjqso04',
+		        })
+                cos.putObject({
+		            Bucket: 'grace921106-1257278051',  
+		            Region: 'ap-chengdu',     
+		            Key: filename2,
+		            StorageClass: 'STANDARD',
+		            Body: selectedFile2, // 上传文件对象
+		            onProgress: function(progressData) {
+				        console.log(JSON.stringify(progressData));
+		            }
+		        }, function(err, data) {
+		            console.log(err || data);
+		            //console.log(data.Location);
+
+		        });
+                
+		        cos.getObjectUrl({
+                    Bucket: 'grace921106-1257278051',
+                    Region:'ap-chengdu',
+                    Key: filename2, // 替换要下载的文件路径
+                    Sign: false
+    
+                }, function (err, data) {
+                    console.log(err || data.Url);
+	                urlObject2=data.Url;
+	                //alert("upsuccess");
+    
+                    var p_id = PMMessageID;
+                    var name = document.getElementById('PMChangeName').value;
+                    var tag = document.getElementById('PMChangeRemark').value; 
+                    var url=urlObject2;
+                    var setpersonjson={
+                        "appid": "ZQKJ2018",
+                        "data": {
+                            "p_id": p_id,
+                            "name": name,
+                            "image":url,
+                            "tag":tag
+                        }
+                    };
+
+            
+                    $.ajax({
+
+                        url:posturl+"/face/setperson",
+                        data:JSON.stringify(setpersonjson),
+                        type:"POST",
+                        datatype:"json",
+                        success:function(data){
+                            var date = $.parseJSON(data);
+                            if(date['code'] == 1){
+                                alert(date['msg']);
+                            }
+                            else{
+                                alert('修改成功！');
+                                //document.getElementById('PEID').value = '';
+                                //document.getElementById('PEName').value = '';
+                                //document.getElementById('PERemark').value = ''; 
+                                //var imgId2 = document.getElementById("imgWait");  
+                                // imgId2.src ="./images/timg.png"; 
+                                document.getElementById('PMMessageName').innerHTML=name;
+                                document.getElementById('PMMessageRemark').innerHTML=tag;
+                                document.getElementById('PMMimage').src=url; 
+                            }               
+                        },
+                    });
+                    flag=0;
+                });          
+            }
+            else{
+                //alert(flag);
+                var p_id = PMMessageID;
+                //alert(p_id);
+                var name = document.getElementById('PMChangeName').value;
+                //alert(name);
+                var tag = document.getElementById('PMChangeRemark').value; 
+                //alert(tag);
+                var url=PMMessagePhoto;
+                //alert(url);
+                var setpersonjson={
+                    "appid": "ZQKJ2018",
+                    "data": {
+                        "p_id": p_id,
+                        "name": name,
+                        "image":url,
+                        "tag":tag
+                    }
+                };
+                $.ajax({
+                    url:posturl+"/face/setperson",
+                    data:JSON.stringify(setpersonjson),
+                    type:"POST",
+                    datatype:"json",
+                    success:function(data){
+                        var date = $.parseJSON(data);
+                        if(date['code'] == 1){
+                            alert(date['msg']);
+                        }
+                        else{
+                            alert('修改成功！');
+                            //document.getElementById('PEID').value = '';
+                            //document.getElementById('PEName').value = '';
+                            //document.getElementById('PERemark').value = ''; 
+                            //var imgId2 = document.getElementById("imgWait");  
+                            // imgId2.src ="./images/timg.png"; 
+                            document.getElementById('PMMessageName').innerHTML=name;
+                            document.getElementById('PMMessageRemark').innerHTML=tag;
+                            document.getElementById('PMMimage').src=url; 
+                        }               
+                    },
+                });
+            }			
+        })
+    })
+})  
+
+
+
+//删除
+var NUM  
+$('.PMR').click(function () {
+    // body...
+  
+        
+})
+
+$(document).ready(function () {        
+    $("#PMRemovebut").click(function () { 
+        var PMM = document.getElementById('PMM');
+        var p_id = document.getElementById('PMMessageID').innerText;
+        var delperson={"appid":"ZQKJ2018","data":{"p_id":p_id}};
+        //alert(p_id);
+        $.ajax({
+
+            url:posturl+"/face/delperson",
+            //处理页面的路径
+            data:JSON.stringify(delperson),
+            //传递的数据.提交数一般以json格式来写,key是自定义的,:后面的值 就是上面的值
+            type:"POST",
+            //数据的提交传递方式,GET,POST 最好用POST
+            datatype:"json",
+            //返回值的类型,TEXT,JSON,XML三种类型可选
+            success:function(res){
+            //如果ajax执行成功,返回来调用success函数即回调函数,返回值以参数的形式返回
+                //将接收数据转换成JSObject格式
+                var date = $.parseJSON(res);
+                //var n = date.length;
+               // document.getElementById('PMSearchNum').innerHTML = n;
+                //判断是否有结果
+                if(date['code'] == 1){
+                    alert(date['msg']);
+                }
+                else{
+                    alert("delete success");
+                    var div_delete=document.getElementById("PMM");
+                    div_delete.setAttribute("style","display:none");
+                    alert(div_delete);
+                }         
+
+            },
+
+        });                       
+    })
+})
+
+
+
+//搜索      
+$(document).ready(function () {
+    // body...
+    var PMSearchinput;
+    var p_id;
+    $("#PMSearchbut").click(function () {
+        PMSearchinput = $("#PMSearchinput").val();
+        p_id = PMSearchinput;
+        // alert(p_id);
+        if (PMSearchinput == "") {
+            alert('请输入正确的ID');
+        }
+        else {
+            var jsonobj = {
+                "appid": "ZQKJ2018",
+                "data": {"p_id":p_id}
+            };
+            $.ajax({
+
+                url:posturl+"/face/getperson",
+                data:JSON.stringify(jsonobj),
+                type:"post",
+                datatype:"JSON",
+                success:function(res){
+                    var date = $.parseJSON(res);
+                    //判断是否有结果
+                    if (date['code'] == 1) {
+                        alert("当前查询无结果！");                     
+                    }
+                    else {
+                        //alert(date['data']['p_id']);
+                        var p_id = date['data']['p_id'];
+                        var name = date['data']['name'];
+                        var url = date['data']['image'];
+                        var tag = date['data']['tag'];
+
+                        var divv=document.getElementById("PMM");
+                        divv.setAttribute("style","display"); 
+
+                        document.getElementById("PMMessageID").innerText=p_id;
+                        //alert(tag);
+                        document.getElementById("PMMessageName").innerText=name;
+                        document.getElementById("PMMessageRemark").innerText=tag;
+                        var imgIdfind = document.getElementById("PMMimage");  
+                        imgIdfind.src =url;                                 
+                        // var addDiv = document.createElement('div');
+                        // var i=2;           
+                        //addDiv.innerHTML = '<div class="row" id="PMM" ><div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" ><span id="PMMessageID">'+ p_id +'</span></div><div id="topAD" class="col-lg-4 col-md-4 col-sm-4 col-xs-4" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSystem2" aria-expanded="true" aria-controls="collapseOne"><span id="topA" class="glyphicon  glyphicon-triangle-right  "></span> <span id="PMMessageName">'+ name +'</span></div><div class="col-lg-5 col-md-5 col-sm-5 col-xs-5"><span id="PMMessageRemark">'+ tag +'</span></div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><button class="btn btn-success btn-xs" data-toggle="modal" data-target="#changeSource" ><span class= "PMC" id="PM">修改</span></button><button class="btn btn-danger btn-xs" data-toggle="modal" data-target="#deleteSource" id=""><span class="PMR" id="PMM">删除</span></button></div></div>      <div id="collapseSystem2" class="collapse" aria-expanded="false"><div style="padding: 50px 0;margin-top: 50px;background-color: #fff; text-align: right;width: 1000px;height:300px;margin: 10px auto;"><img class="vip" src="'+ url +'" alt="Google Chrome" width="100" height="100" >   <label class="col-xs-4 control-label">姓名：</label><div class="col-xs-5"><span style="float:left; position: relative; bottom: -4px;left: -20px;" id="PMMessageName2">'+ name +'</span></div><label  class="col-xs-4 control-label" style="position:relative; top:-60px;">I&nbsp;&nbsp;D：</label><div class="col-xs-5" style="position: relative;top: -60px;"><span style="float:left; position: relative; bottom: -4px;left: -20px;" id="PMMessageID2">'+ p_id +'</span></div> <label  class="col-xs-4 control-label" style="position:relative; left: -333px;top:-45px;">备注：</label><div class="col-xs-5" style="position: relative; top:-79px;left: 345px;"><span style="position: relative;left: -32px;float: left;" id="PMMessageRemark2">'+ tag +'</span></div>';
+                        // i=i+1;
+                        // $("#PMMessage").append(addDiv);   
+                    }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest.status);
+                    alert(XMLHttpRequest.readyState);
+                    alert(textStatus);}
+
+            });            
+        }
+    })
+})
+     
+</script>
+
+
+
+
+
+
+<!-- 人员录入模块-->
+
+<script type="text/javascript">
+
+var p_id;//要录入的人员的ID，姓名，备注，照片地址
+var name;
+var tag;
+var url;
+var selectedFile;//云服务器上传得文件，文件名
+var filename;
+var urlObject;
+$(document).ready(function(){
+    $("#file1").change(function(){   
+        var current_pic=this.files[0];
+        preview_picture(current_pic);
+        selectedFile = document.getElementById('file1').files[0];
+	 	filename = selectedFile.name;                   
+    });
+});
+               
+function preview_picture(pic){
+    var r=new FileReader();
+    r.readAsDataURL(pic);
+    r.onload=function(e){
+        $("#imgWait").attr("src",this.result).show();    
+    };
+}
+
+//录入
+   
+//取消
+$(document).ready(function () {
+    // body...
+    $('#PECancle').click(function () {
+        // body...
+        document.getElementById('PEID').value = '';
+        document.getElementById('PEName').value = '';
+        document.getElementById('PERemark').value = '';
+        //alert(123);
+        //$("#imgWait").attr("src",this.result).show();
+        var imgId2 = document.getElementById("imgWait");  
+        imgId2.src ="./images/timg.png";     
+
+    })
+})
+
+//提交
+$(document).ready(function () {       
+    $('#PESubmit').click(function () {
+        var cos = new COS({
+	        SecretId: 'AKIDZ3RLBwc7ZsEVfgTgWKwW1HBxukU5qq1F',
+            SecretKey: 'NchiihZQE35sXBLSPDJJMKDzmnjqso04',
+		})
+		cos.putObject({
+		    Bucket: 'grace921106-1257278051',  
+		    Region: 'ap-chengdu',     
+		    Key: filename,
+		    StorageClass: 'STANDARD',
+		    Body: selectedFile, // 上传文件对象
+		    onProgress: function(progressData) {
+				console.log(JSON.stringify(progressData));
+		    }
+		}, function(err, data) {
+		    console.log(err || data);
+		    console.log(data.Location);
+		});	
+		cos.getObjectUrl({
+            Bucket: 'grace921106-1257278051',
+            Region:'ap-chengdu',
+            Key: filename, // 替换要下载的文件路径
+            Sign: false    
+        }, function (err, data) {
+            console.log(err || data.Url);
+	        urlObject=data.Url;
+	
+            p_id = document.getElementById('PEID').value;
+            name = document.getElementById('PEName').value;
+            tag = document.getElementById('PERemark').value;
+            url=urlObject;
+
+            var newpersonjson={"appid": "ZQKJ2018","data":{"p_id":p_id,"name":name,"image":url,"tag":tag}};
+
+            
+            $.ajax({
+
+                url:posturl+"/face/newperson",
+                data:JSON.stringify(newpersonjson),
+                type:"POST",
+                datatype:"json",
+                success:function(data){
+                    var date = $.parseJSON(data);
+                    if(date['code'] == 1){
+
+                        alert(date['msg']);
+                    }
+                    else{
+                        alert('添加成功！');
+                        
+                        document.getElementById('PEID').value = '';
+                        document.getElementById('PEName').value = '';
+                        document.getElementById('PERemark').value = ''; 
+                        var imgId2 = document.getElementById("imgWait");  
+                        imgId2.src ="./images/timg.png";     
+                      
+                    }               
+                },
+
+            });
+
+        });         
+    })                
+})
+</script>
+
+
+
+<!--统计信息JS-->
+
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+<script type="text/javascript">
+
+
+$(document).ready(function () {
+    // body...
+    var beginTime;
+    var endTime;
+    $("#statisticSearchBut").click(function () {
+        // body...
+        beginTime = $("#datemin").val();
+        endTime = $("#datemax").val();
+        var staticjson={"appid":"ZQKJ2018","data":{"begintime": beginTime,"endtime": endTime}};
+
+        if (beginTime != "" && endTime != "") {
+            //alert("最小时间为： " + timeMin + ", 最大时间为： " + timeMax);
+            $.ajax({
+
+                url:posturl+"/face/count",
+               
+                data:JSON.stringify(staticjson),
+
+                type:"POST",
+
+                datatype:"JSON",
+
+                success:function(data){
+
+                    var date = $.parseJSON(data);
+                    if(date['code'] == 1){
+                            alert(['msg']);
+                        }
+                    else{
+                        alert("success");
+                    }
+   
+                },
+
+        });
+
+
+        }
+        else if (beginTime == "" || endTime == ""){
+            alert("搜索时间不能为空！");
+        }
+
+    })
+})   
+
+
+
+
+</script>
+
+
+<!-- 绘制图表-->
+<script type="text/javascript">
+
+    // 每日  
+    var myChart = echarts.init(document.getElementById('everyDay'));
+    var option = {
+        xAxis: {
+            data: ['8:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00','24:00'],
+        },
+        yAxis: {},
+        series: [{
+            name: '每日信息',
+            type: 'bar',
+            data: [5, 20, 36, 10, 10, 20,23,12,6]
+        }]
+    };
+    myChart.setOption(option);
+
+    // 每周
+    var date1 = 5;
+    
+    var myChart = echarts.init(document.getElementById('everyWeek'));
+    var option = {
+        xAxis: {
+            data: ["周一","周二","周三","周四","周五","周六","周日"]
+        },
+        yAxis: {},
+        series: [{
+            name: '每周信息',
+            type: 'bar',
+            data: [date1, 20, 36, 10, 10, 20, 12]
+        }]
+    };
+    myChart.setOption(option);
+
+    // 每月
+    var myChart = echarts.init(document.getElementById('everyMonth'));
+    var option = {
+        xAxis: {
+            data: ['5号','10号','15号','20号','25号','30号'],
+        },
+        yAxis: {},
+        series: [{
+            name: '每月信息',
+            type: 'line',
+            data: [5, 20, 36, 10, 10, 20]
+        }]
+    };
+    myChart.setOption(option);
+   
+
+</script>  
+</body>
+
+</html>
